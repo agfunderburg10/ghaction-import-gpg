@@ -50,11 +50,11 @@ async function run(): Promise<void> {
       });
     });
 
+    core.info('Configuring GnuPG agent');
+    await gpg.configureAgent(gpg.agentConfig);
+
     if (inputs.passphrase && !inputs.fingerprint) {
       // Set the passphrase for all subkeys
-
-      core.info('Configuring GnuPG agent');
-      await gpg.configureAgent(gpg.agentConfig);
 
       await core.group(`Getting keygrips`, async () => {
         for (const keygrip of await gpg.getKeygrips(fingerprint)) {
@@ -68,9 +68,6 @@ async function run(): Promise<void> {
 
     if (inputs.passphrase && inputs.fingerprint) {
       // Set the passphrase only for the subkey specified in the input `fingerprint`
-
-      core.info('Configuring GnuPG agent');
-      await gpg.configureAgent(gpg.agentConfig);
 
       await core.group(`Getting keygrip for fingerprint`, async () => {
         const keygrip = await gpg.getKeygrip(fingerprint);
